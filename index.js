@@ -3,7 +3,7 @@ const readline = require('readline');
 const {google} = require('googleapis');
 
 // If modifying these scopes, delete token.json.
-const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
+const SCOPES = ['https://www.googleapis.com/auth/calendar'];// removed readonly
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
@@ -82,10 +82,17 @@ function listEvents(auth) {
     if (err) return console.log('The API returned an error: ' + err);
     const events = res.data.items;
     if (events.length) {
-      console.log('Upcoming 10 events:');
+      console.log('Upcoming 10 events:');  
       events.map((event, i) => {
         const start = event.start.dateTime || event.start.date;
         console.log(`${start} - ${event.summary}`);
+
+        // here write events to json
+        fs.writeFile('event.json', JSON.stringify("time :" + start + ", discription :" + event.summary, null,2), (err) => {
+        if (err) return console.error(err);
+      });
+
+
       });
     } else {
       console.log('No upcoming events found.');
